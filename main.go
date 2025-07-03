@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/Yuta-Matsumoto999/go_gin_tutorial/services"
 	"github.com/Yuta-Matsumoto999/go_gin_tutorial/controllers"
 	"github.com/Yuta-Matsumoto999/go_gin_tutorial/models"
 	"github.com/Yuta-Matsumoto999/go_gin_tutorial/repositories"
+	"github.com/Yuta-Matsumoto999/go_gin_tutorial/services"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
