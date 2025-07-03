@@ -1,0 +1,53 @@
+package controllers
+
+import (
+	"net/http"
+	"strconv"
+
+	"github.com/Yuta-Matsumoto999/go_gin_tutorial/repositories"
+	"github.com/Yuta-Matsumoto999/go_gin_tutorial/services"
+	"github.com/gin-gonic/gin"
+)
+
+type IItemController interface {
+	FindAll(ctx *gin.Context)
+	FindById(ctx *gin.Context)
+}
+
+type ItemController struct {
+	service services.IItemService
+}
+
+func NewItemController(service services.IItemService) IItemController {
+	return &ItemController{
+		service: service,
+	}
+}
+
+func (c *ItemController) FindAll(ctx *gin.Context) {
+	items, err := c.service.FindAll()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"data": items})
+}
+
+func (c *ItemController) FindById(ctx *gin.Context) {
+	itemIdUint64, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid item ID"})
+		return
+	}
+	item, err := c.service.FindById(uint(itemIdUint64))
+	if err != nil {
+		if err == repositories.ErrItemNotFound {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "Item not found"})
+			return
+		} else {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Unexpected error"})
+			return
+		}
+	}
+	ctx.JSON(http.StatusOK, gin.H{"data": item})
+}
