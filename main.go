@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/Yuta-Matsumoto999/go_gin_tutorial/services"
 	"github.com/Yuta-Matsumoto999/go_gin_tutorial/controllers"
 	"github.com/Yuta-Matsumoto999/go_gin_tutorial/models"
 	"github.com/Yuta-Matsumoto999/go_gin_tutorial/repositories"
+	"github.com/Yuta-Matsumoto999/go_gin_tutorial/services"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -22,5 +22,7 @@ func main() {
 	router := gin.Default()
 	router.GET("/items", itemController.FindAll)
 	router.GET("/items/:id", itemController.FindById)
-	router.Run(":8080")
+	if err := router.Run(":8080"); err != nil {
+		panic(err)
+	}
 }

@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"errors"
+
 	"github.com/Yuta-Matsumoto999/go_gin_tutorial/models"
 )
 

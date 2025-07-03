@@ -1,0 +1,20 @@
+name: Analysis
+
+on:
+  pull_request:
+
+jobs:
+  analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check lint
+        uses: reviewdog/action-golangci-lint@v2
+        with:
+          go_version_file: go.mod
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review # PRにコメント
+          level: error 
+          filter_mode: nofilter # 変更箇所以外でエラーが出てもアノテーションをつける
+          golangci_lint_flags: "--config=.golangci.yml"
+          fail_on_error: true
