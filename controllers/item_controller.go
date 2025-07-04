@@ -82,6 +82,10 @@ func (c *ItemController) Update(ctx *gin.Context) {
 	}
 	item, err := c.service.Update(uint(itemIdUint64), updateItemInput)
 	if err != nil {
+		if err == repositories.ErrItemNotFound {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "Item not found"})
+			return
+		}
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Unexpected error"})
 		return
 	}
