@@ -42,11 +42,26 @@ func (s *ItemService) Create(createItemInput dto.CreateItemInput) (*models.Item,
 }
 
 func (s *ItemService) Update(itemId uint, updateItemInput dto.UpdateItemInput) (*models.Item, error) {
-	updateItem := models.Item{
-		Name:        updateItemInput.Name,
-		Price:       updateItemInput.Price,
-		Description: updateItemInput.Description,
-		SoldOut:     updateItemInput.SoldOut,
+	existingItem, err := s.repository.FindById(itemId)
+	if err != nil {
+		return nil, err
 	}
-	return s.repository.Update(itemId, updateItem)
+
+	if updateItemInput.Name != "" {
+		existingItem.Name = updateItemInput.Name
+	}
+
+	if updateItemInput.Price != 0 {
+		existingItem.Price = updateItemInput.Price
+	}
+
+	if updateItemInput.Description != "" {
+		existingItem.Description = updateItemInput.Description
+	}
+
+	if updateItemInput.SoldOut {
+		existingItem.SoldOut = updateItemInput.SoldOut
+	}
+
+	return s.repository.Update(itemId, *existingItem)
 }
