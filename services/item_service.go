@@ -1,6 +1,7 @@
 package services
 
 import (
+	"github.com/Yuta-Matsumoto999/go_gin_tutorial/dto"
 	"github.com/Yuta-Matsumoto999/go_gin_tutorial/models"
 	"github.com/Yuta-Matsumoto999/go_gin_tutorial/repositories"
 )
@@ -8,6 +9,7 @@ import (
 type IItemService interface {
 	FindAll() (*[]models.Item, error)
 	FindById(itemId uint) (*models.Item, error)
+	Create(createItemInput dto.CreateItemInput) (*models.Item, error)
 }
 
 type ItemService struct {
@@ -26,4 +28,14 @@ func (s *ItemService) FindAll() (*[]models.Item, error) {
 
 func (s *ItemService) FindById(itemId uint) (*models.Item, error) {
 	return s.repository.FindById(itemId)
+}
+
+func (s *ItemService) Create(createItemInput dto.CreateItemInput) (*models.Item, error) {
+	newItem := models.Item{
+		Name:        createItemInput.Name,
+		Price:       createItemInput.Price,
+		Description: createItemInput.Description,
+		SoldOut:     false,
+	}
+	return s.repository.Create(newItem)
 }

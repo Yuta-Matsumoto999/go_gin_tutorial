@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/Yuta-Matsumoto999/go_gin_tutorial/dto"
 	"github.com/Yuta-Matsumoto999/go_gin_tutorial/repositories"
 	"github.com/Yuta-Matsumoto999/go_gin_tutorial/services"
 	"github.com/gin-gonic/gin"
@@ -12,6 +13,7 @@ import (
 type IItemController interface {
 	FindAll(ctx *gin.Context)
 	FindById(ctx *gin.Context)
+	Create(ctx *gin.Context)
 }
 
 type ItemController struct {
@@ -50,4 +52,18 @@ func (c *ItemController) FindById(ctx *gin.Context) {
 		}
 	}
 	ctx.JSON(http.StatusOK, gin.H{"data": item})
+}
+
+func (c *ItemController) Create(ctx *gin.Context) {
+	var createItemInput dto.CreateItemInput
+	if err := ctx.ShouldBindJSON(&createItemInput); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	newItem, err := c.service.Create(createItemInput)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Unexpected error"})
+		return
+	}
+	ctx.JSON(http.StatusCreated, gin.H{"data": newItem})
 }

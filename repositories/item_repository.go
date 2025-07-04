@@ -11,6 +11,7 @@ var ErrItemNotFound = errors.New("item not found")
 type IItemRepository interface {
 	FindAll() (*[]models.Item, error)
 	FindById(id uint) (*models.Item, error)
+	Create(newItem models.Item) (*models.Item, error)
 }
 
 type ItemMemoryRepository struct {
@@ -34,4 +35,11 @@ func (r *ItemMemoryRepository) FindById(itemId uint) (*models.Item, error) {
 		}
 	}
 	return nil, ErrItemNotFound
+}
+
+func (r *ItemMemoryRepository) Create(newItem models.Item) (*models.Item, error) {
+	lastId := uint(len(r.items))
+	newItem.ID = lastId + 1
+	r.items = append(r.items, newItem)
+	return &newItem, nil
 }
