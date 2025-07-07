@@ -6,3 +6,5 @@ format:
 	@echo "Running format..."
 	golangci-lint run --fix
 	@echo "Format completed"
+up:
+	docker compose up -d
