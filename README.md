@@ -19,7 +19,7 @@ mkdir && cd [project_name]
 go mod init [module_name]
 ```
 
-* `go.mode`が作成される
+* `go.mod`が作成される
 
 ### ginのinstall
 
